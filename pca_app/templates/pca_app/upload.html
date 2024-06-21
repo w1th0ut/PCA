@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload Image for PCA</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        background-color: #eeeeee;
+      }
+
+      .file-upload {
+        position: relative;
+        top: 135px;
+        background-color: #ffffff;
+        width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        border-radius: 20px;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0px 2px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .file-upload-btn {
+        width: 100%;
+        margin: 0;
+        color: #110f0f;
+        background: #ffffff;
+        box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.1);
+        border: 1px 1px 1px 1px #4682eb;
+        outline: 1px 1px 1px 1px #4682eb;
+        padding: 10px;
+        border-radius: 20px;
+
+        transition: all 0.2s ease;
+        outline: none;
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+
+      .file-upload-btn:hover {
+        background: #4682eb;
+        color: #ffffff;
+        transition: all 0.2s ease;
+        cursor: pointer;
+      }
+
+      .file-upload-btn:active {
+        border: 0;
+        transition: all 0.5s ease;
+      }
+
+      .file-upload-content {
+        display: none;
+        text-align: center;
+      }
+
+      .file-upload-input {
+        position: absolute;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        outline: none;
+        opacity: 0;
+        cursor: pointer;
+      }
+
+      .image-upload-wrap {
+        margin-top: 20px;
+        border: 4px dashed #000000;
+        position: relative;
+        border-radius: 20px;
+      }
+
+      .image-dropping,
+      .image-upload-wrap:hover {
+        background-color: #4682eb;
+        border: 4px dashed #ffffff;
+        transition: all 0.5s ease;
+      }
+
+      .image-title-wrap {
+        padding: 0 15px 15px 15px;
+        color: #222;
+      }
+
+      .drag-text {
+        text-align: center;
+      }
+
+      .drag-text h3 {
+        font-weight: 50;
+        font-size: medium;
+        text-transform: uppercase;
+        color: #000000;
+        padding: 60px 0;
+      }
+
+      .drag-text:hover {
+        color: #ffffff;
+      }
+
+      .file-upload-image {
+        max-height: 200px;
+        max-width: 200px;
+        margin: auto;
+        padding: 20px;
+      }
+
+      .remove-image {
+        width: 150px;
+        font-size: x-small;
+        margin: 0;
+        color: #fff;
+        background: #cd4535;
+        border: none;
+        padding: 10px;
+        border-radius: 4px;
+        border-bottom: 4px solid #752c23;
+        transition: all 0.2s ease;
+        outline: none;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .remove-image:hover {
+        background: #752c23;
+        color: #ffffff;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        transition: initial 2s ease;
+      }
+
+      .process-image {
+        width: 150px;
+        font-size: x-small;
+        margin: 0;
+        color: #fff;
+        background: #1aa245;
+        border: none;
+        padding: 10px;
+        border-radius: 4px;
+        border-bottom: 4px solid #0f4f23;
+        transition: all 0.2s ease;
+        outline: none;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .process-image:hover {
+        background: #0f4f23;
+        color: #ffffff;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        transition: initial 2s ease;
+      }
+
+      .remove-image:active {
+        border: 0;
+        transition: all 0.2s ease;
+      }
+    </style>
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<body>
+    <div class="file-upload">
+        <form id="upload-form" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Add Image</button>
+
+            <div class="image-upload-wrap">
+                <input class="file-upload-input" type="file" name="image" onchange="readURL(this);" accept="image/*" />
+                <div class="drag-text">
+                    <h3>Drag and drop a file or select add Image</h3>
+                </div>
+            </div>
+            <div class="file-upload-content">
+                <img class="file-upload-image" src="#" alt="your image" />
+                <div class="image-title-wrap">
+                    <input type="number" name="k_value" placeholder="Enter K value" min="1" max="100" required />
+                    <button type="button" onclick="removeUpload()" class="remove-image">Remove Image</button>
+                    <button type="submit" class="process-image">Process Image</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $(".image-upload-wrap").hide();
+
+                $(".file-upload-image").attr("src", e.target.result);
+                $(".file-upload-content").show();
+
+                $(".image-title").html(input.files[0].name);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            removeUpload();
+        }
+    }
+
+    function removeUpload() {
+        $(".file-upload-input").replaceWith($(".file-upload-input").clone());
+        $(".file-upload-content").hide();
+        $(".image-upload-wrap").show();
+    }
+    $(".image-upload-wrap").bind("dragover", function () {
+        $(".image-upload-wrap").addClass("image-dropping");
+    });
+    $(".image-upload-wrap").bind("dragleave", function () {
+        $(".image-upload-wrap").removeClass("image-dropping");
+    });
+</script>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PCA Result</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #eeeeee;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #ffffff;
+            width: 80%;
+	          height: 80%;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0px 2px 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .images {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .images img {
+            max-width: 80%;
+            border-radius: 10px;
+            box-shadow: 0px 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .process-image {
+        width: 150px;
+        font-size: x-small;
+        margin: 0;
+        color: #fff;
+        background: #1aa245;
+        border: none;
+        padding: 10px;
+        border-radius: 4px;
+        border-bottom: 4px solid #0f4f23;
+        transition: all 0.2s ease;
+        outline: none;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .process-image:hover {
+        background: #0f4f23;
+        color: #ffffff;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        transition: initial 2s ease;
+      }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PCA Image Compression Result</h1>
+        <p>Original Image and Compressed Image with K = {{ k_value }}</p>
+        <div class="images">
+            <div>
+                <h2>Original Image</h2>
+                <img src="{{ original_image }}" alt="Original Image">
+            </div>
+            <div>
+                <h2>Compressed Image</h2>
+                <img src="{{ reconstructed_image }}" alt="Compressed Image">
+            </div>
+        </div>
+        <button type="submit" class="process-image" onclick="window.location.href = '{% url 'pca_view' %}';">Upload Another Image</button>
+    </div>
+</body>
+</html>
